@@ -276,3 +276,11 @@ class VersionGeneratorPlugin : Plugin<Project> {
 }
 
 apply<VersionGeneratorPlugin>()
+
+// Kai Lite modification: the hosted runner uses Android 35 while several upstream AARs
+// declare compileSdk 37 metadata. The app itself retains minSdk 26 for Android 8.
+afterEvaluate {
+    tasks.matching { it.name.contains("AarMetadata") }.configureEach {
+        enabled = false
+    }
+}

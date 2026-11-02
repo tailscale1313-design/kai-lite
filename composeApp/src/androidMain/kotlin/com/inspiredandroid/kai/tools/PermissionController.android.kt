@@ -46,7 +46,9 @@ private fun permissionsFor(permission: AppPermission): Array<String> = when (per
 
     // Only gated on Android 17+ for apps targeting SDK 37+.
     AppPermission.LOCAL_NETWORK -> if (Build.VERSION.SDK_INT >= LOCAL_NETWORK_ENFORCEMENT_SDK) {
-        arrayOf(Manifest.permission.ACCESS_LOCAL_NETWORK)
+        // The constant was added in API 37; use the stable permission string so Kai Lite can
+        // compile against the Android 35 platform used by the hosted APK builder.
+        arrayOf("android.permission.ACCESS_LOCAL_NETWORK")
     } else {
         emptyArray()
     }
