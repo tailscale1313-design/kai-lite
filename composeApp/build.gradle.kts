@@ -283,4 +283,9 @@ afterEvaluate {
     tasks.matching { it.name.contains("AarMetadata") }.configureEach {
         enabled = false
     }
+    layout.buildDirectory
+        .dir("intermediates/aar_metadata_check/androidMain/checkAndroidMainAarMetadata")
+        .get()
+        .asFile
+        .mkdirs()
 }
