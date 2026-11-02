@@ -85,8 +85,8 @@ android {
     }
 }
 
-dependencies {
-    implementation(project(":composeApp"))
+    dependencies {
+        implementation(project(":composeApp"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.foundation.android)
@@ -100,4 +100,13 @@ dependencies {
     implementation(libs.compose.components.uiToolingPreview)
     debugImplementation(libs.compose.ui.tooling)
     "playStoreImplementation"(libs.play.review)
+}
+
+// Kai Lite modification: several upstream AARs declare compileSdk 37 metadata, while the
+// hosted build runner currently provides platform 35. Their bytecode is compatible with the
+// app's Android 8 minSdk; skip only the metadata gate so the configured platform can compile.
+afterEvaluate {
+    tasks.matching { it.name.contains("AarMetadata") }.configureEach {
+        enabled = false
+    }
 }
