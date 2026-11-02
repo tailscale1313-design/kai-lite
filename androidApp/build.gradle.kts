@@ -85,8 +85,8 @@ android {
     }
 }
 
-    dependencies {
-        implementation(project(":composeApp"))
+dependencies {
+    implementation(project(":composeApp"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.foundation.android)
