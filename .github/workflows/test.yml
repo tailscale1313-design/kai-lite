@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     name: Run Unit Tests
@@ -110,4 +114,23 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add -A
           git commit -m "Auto-fix: spotlessApply and updateScreenshots [skip ci]"
-          git push
+
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+
+          for attempt in 1 2 3; do
+            echo "Push attempt $attempt..."
+            git fetch origin "$BRANCH"
+            if git rebase "origin/$BRANCH"; then
+              if git push origin "HEAD:$BRANCH"; then
+                echo "Pushed successfully."
+                exit 0
+              fi
+            else
+              echo "Rebase conflicted, retrying from a clean base..."
+              git rebase --abort || true
+            fi
+            sleep 5
+          done
+
+          echo "::error::Could not push after 3 attempts."
+          exit 1
